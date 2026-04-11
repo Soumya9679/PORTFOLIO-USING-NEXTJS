@@ -17,11 +17,12 @@ export default function ScrollToTop() {
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       className={cn(
-        'fixed bottom-6 right-6 z-50 w-11 h-11 rounded-full',
-        'bg-gradient-to-r from-indigo-500 to-cyan-500',
-        'flex items-center justify-center text-white',
-        'shadow-lg shadow-indigo-500/25',
-        'transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-500/30',
+        'fixed bottom-6 right-6 z-50 w-12 h-12 rounded-2xl',
+        'bg-nebula-surface-high/80 backdrop-blur-xl',
+        'border border-white/[0.06]',
+        'flex items-center justify-center text-[#cbc3d7]',
+        'shadow-float',
+        'transition-all duration-500 hover:-translate-y-1 hover:shadow-glow-sm hover:text-violet-primary hover:border-violet-container/30',
         visible
           ? 'opacity-100 translate-y-0'
           : 'opacity-0 translate-y-4 pointer-events-none'

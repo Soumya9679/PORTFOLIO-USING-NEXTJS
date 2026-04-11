@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
-import { ExternalLink, Download } from 'lucide-react';
+import { ExternalLink, Download, ArrowUpRight } from 'lucide-react';
 import SectionHeading from '@/components/ui/SectionHeading';
 
 const projects = [
@@ -59,11 +59,12 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 40, filter: 'blur(8px)' },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.25, 0.4, 0.25, 1] },
+    filter: 'blur(0px)',
+    transition: { duration: 0.7, ease: [0.25, 0.4, 0.25, 1] },
   },
 };
 
@@ -71,8 +72,12 @@ export default function Projects() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section id="projects" className="py-24 md:py-32 px-6">
-      <div className="max-w-6xl mx-auto">
+    <section id="projects" className="relative py-24 md:py-36 px-6">
+      {/* Section ambient glow */}
+      <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-violet-deep/[0.03] blur-[200px] pointer-events-none" />
+      <div className="absolute bottom-0 left-1/4 w-[300px] h-[300px] bg-cyan-container/[0.02] blur-[150px] pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto relative">
         <motion.div
           variants={shouldReduceMotion ? undefined : containerVariants}
           initial="hidden"
@@ -92,35 +97,47 @@ export default function Projects() {
               <motion.article
                 key={project.title}
                 variants={itemVariants}
-                className="group glass-card overflow-hidden hover:border-indigo-500/20 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-indigo-500/[0.05]"
+                className="group glass-card overflow-hidden transition-all duration-500 hover:-translate-y-3 hover:shadow-glow-md"
               >
-                {/* Project Image */}
+                {/* Project Image with gradient overlay */}
                 <div className="relative overflow-hidden aspect-video">
                   <Image
                     src={project.image}
                     alt={project.title}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover transition-all duration-700 group-hover:scale-110 group-hover:blur-[1px]"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A0F1E] via-transparent to-transparent opacity-60" />
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-nebula-base via-nebula-base/30 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
+
+                  {/* Hover overlay with icon */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
+                      {project.type === 'download' ? (
+                        <Download className="w-5 h-5 text-white" />
+                      ) : (
+                        <ArrowUpRight className="w-5 h-5 text-white" />
+                      )}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Project Content */}
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-indigo-400 transition-colors duration-200">
+                <div className="p-6 pt-5">
+                  <h3 className="text-lg font-bold font-display text-[#e1e2ed] mb-2 group-hover:text-violet-primary transition-colors duration-300">
                     {project.title}
                   </h3>
-                  <p className="text-slate-400 text-sm leading-relaxed mb-4">
+                  <p className="text-[#958ea0] text-sm leading-relaxed mb-5">
                     {project.description}
                   </p>
 
-                  {/* Tech Tags */}
+                  {/* Tech Tags – glass chips */}
                   <div className="flex flex-wrap gap-2 mb-5">
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2.5 py-1 text-xs font-medium rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20"
+                        className="tech-chip"
                       >
                         {tag}
                       </span>
@@ -132,7 +149,7 @@ export default function Projects() {
                     href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-cyan-400 hover:text-cyan-300 transition-colors group/link"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-cyan-primary hover:text-cyan-container transition-colors group/link"
                   >
                     {project.type === 'download' ? (
                       <>

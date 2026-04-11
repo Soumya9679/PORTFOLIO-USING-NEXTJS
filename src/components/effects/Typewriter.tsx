@@ -47,12 +47,13 @@ export default function Typewriter() {
   }, []);
 
   return (
-    <div className="h-10 md:h-12 flex items-center justify-center gap-1">
+    <div className="h-10 md:h-12 flex items-center justify-center gap-1.5">
+      <span className="text-[#958ea0] text-lg md:text-xl font-mono">{'>'}</span>
       <span
         ref={textRef}
-        className="text-xl sm:text-2xl md:text-3xl font-semibold text-white/90"
+        className="text-xl sm:text-2xl md:text-3xl font-semibold font-display text-[#cbc3d7]"
       />
-      <span className="w-[3px] h-7 md:h-9 bg-cyan-400 rounded-full animate-pulse" />
+      <span className="w-[3px] h-7 md:h-9 rounded-full bg-gradient-to-b from-violet-container to-cyan-container animate-pulse" />
     </div>
   );
 }

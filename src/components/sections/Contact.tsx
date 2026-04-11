@@ -14,6 +14,7 @@ import {
   Loader2,
   CheckCircle,
   XCircle,
+  ArrowUpRight,
 } from 'lucide-react';
 import SectionHeading from '@/components/ui/SectionHeading';
 import { cn } from '@/lib/utils';
@@ -32,24 +33,32 @@ const socialLinks = [
     href: 'mailto:maitysoumya108@gmail.com',
     label: 'Email',
     username: 'maitysoumya108@gmail.com',
+    color: 'from-rose-500/20 to-orange-500/20',
+    iconColor: 'text-rose-400',
   },
   {
     icon: Github,
     href: 'https://github.com/Maitysoumya12345',
     label: 'GitHub',
     username: '@Maitysoumya12345',
+    color: 'from-violet-container/20 to-violet-deep/20',
+    iconColor: 'text-violet-primary',
   },
   {
     icon: Linkedin,
     href: 'https://linkedin.com/in/soumyadip-maity-996686353',
     label: 'LinkedIn',
     username: 'Soumyadip Maity',
+    color: 'from-blue-500/20 to-cyan-500/20',
+    iconColor: 'text-blue-400',
   },
   {
     icon: Code2,
     href: 'https://leetcode.com/u/_soumya__dip_/',
     label: 'LeetCode',
     username: '@_soumya__dip_',
+    color: 'from-amber-primary/20 to-orange-500/20',
+    iconColor: 'text-amber-primary',
   },
 ];
 
@@ -59,11 +68,12 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 40, filter: 'blur(8px)' },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.25, 0.4, 0.25, 1] },
+    filter: 'blur(0px)',
+    transition: { duration: 0.7, ease: [0.25, 0.4, 0.25, 1] },
   },
 };
 
@@ -104,11 +114,15 @@ export default function Contact() {
   };
 
   const inputBaseClass =
-    'w-full px-4 py-3 bg-white/[0.04] border rounded-xl text-white text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40 transition-all duration-200';
+    'w-full px-5 py-3.5 bg-nebula-surface-low/80 border rounded-xl text-[#e1e2ed] text-sm placeholder:text-[#494454] focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-300 backdrop-blur-sm';
 
   return (
-    <section id="contact" className="py-24 md:py-32 px-6">
-      <div className="max-w-5xl mx-auto">
+    <section id="contact" className="relative py-24 md:py-36 px-6">
+      {/* Section ambient glow */}
+      <div className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-violet-container/[0.03] blur-[200px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-cyan-container/[0.02] blur-[150px] pointer-events-none" />
+
+      <div className="max-w-5xl mx-auto relative">
         <motion.div
           variants={shouldReduceMotion ? undefined : containerVariants}
           initial="hidden"
@@ -127,13 +141,13 @@ export default function Contact() {
             {/* Social Links Card */}
             <motion.div
               variants={itemVariants}
-              className="glass-card p-6 md:p-8"
+              className="glass-card p-8 md:p-10"
             >
-              <h3 className="text-lg font-semibold text-white mb-6">
+              <h3 className="text-xl font-bold font-display text-[#e1e2ed] mb-8">
                 Find me online
               </h3>
-              <div className="space-y-3">
-                {socialLinks.map(({ icon: Icon, href, label, username }) => (
+              <div className="space-y-4">
+                {socialLinks.map(({ icon: Icon, href, label, username, color, iconColor }) => (
                   <a
                     key={label}
                     href={href}
@@ -143,17 +157,21 @@ export default function Contact() {
                         ? undefined
                         : 'noopener noreferrer'
                     }
-                    className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/[0.04] transition-colors group"
+                    className="group flex items-center gap-4 p-4 rounded-2xl hover:bg-white/[0.03] transition-all duration-300"
                   >
-                    <div className="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500/20 transition-colors shrink-0">
-                      <Icon className="w-5 h-5" />
+                    <div className={cn(
+                      'w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:shadow-glow-sm',
+                      color
+                    )}>
+                      <Icon className={cn('w-5 h-5', iconColor)} />
                     </div>
-                    <div className="min-w-0">
-                      <p className="text-white text-sm font-medium">{label}</p>
-                      <p className="text-slate-500 text-xs truncate">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[#e1e2ed] text-sm font-semibold">{label}</p>
+                      <p className="text-[#958ea0] text-xs truncate">
                         {username}
                       </p>
                     </div>
+                    <ArrowUpRight className="w-4 h-4 text-[#494454] group-hover:text-[#958ea0] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </a>
                 ))}
               </div>
@@ -162,9 +180,9 @@ export default function Contact() {
             {/* Contact Form Card */}
             <motion.div
               variants={itemVariants}
-              className="glass-card p-6 md:p-8"
+              className="glass-card p-8 md:p-10"
             >
-              <h3 className="text-lg font-semibold text-white mb-6">
+              <h3 className="text-xl font-bold font-display text-[#e1e2ed] mb-8">
                 Send a message
               </h3>
               <form
@@ -180,11 +198,14 @@ export default function Contact() {
                     autoComplete="name"
                     className={cn(
                       inputBaseClass,
-                      errors.name ? 'border-red-500/50' : 'border-white/[0.08]'
+                      errors.name
+                        ? 'border-red-500/50 focus:ring-red-500/30'
+                        : 'border-white/[0.06] focus:ring-violet-container/40'
                     )}
                   />
                   {errors.name && (
-                    <p className="mt-1.5 text-xs text-red-400">
+                    <p className="mt-2 text-xs text-red-400 flex items-center gap-1.5">
+                      <XCircle className="w-3 h-3" />
                       {errors.name.message}
                     </p>
                   )}
@@ -200,12 +221,13 @@ export default function Contact() {
                     className={cn(
                       inputBaseClass,
                       errors.email
-                        ? 'border-red-500/50'
-                        : 'border-white/[0.08]'
+                        ? 'border-red-500/50 focus:ring-red-500/30'
+                        : 'border-white/[0.06] focus:ring-violet-container/40'
                     )}
                   />
                   {errors.email && (
-                    <p className="mt-1.5 text-xs text-red-400">
+                    <p className="mt-2 text-xs text-red-400 flex items-center gap-1.5">
+                      <XCircle className="w-3 h-3" />
                       {errors.email.message}
                     </p>
                   )}
@@ -221,12 +243,13 @@ export default function Contact() {
                       inputBaseClass,
                       'resize-none',
                       errors.message
-                        ? 'border-red-500/50'
-                        : 'border-white/[0.08]'
+                        ? 'border-red-500/50 focus:ring-red-500/30'
+                        : 'border-white/[0.06] focus:ring-violet-container/40'
                     )}
                   />
                   {errors.message && (
-                    <p className="mt-1.5 text-xs text-red-400">
+                    <p className="mt-2 text-xs text-red-400 flex items-center gap-1.5">
+                      <XCircle className="w-3 h-3" />
                       {errors.message.message}
                     </p>
                   )}
@@ -237,11 +260,9 @@ export default function Contact() {
                   type="submit"
                   disabled={isSubmitting}
                   className={cn(
-                    'w-full py-3.5 rounded-xl font-semibold text-sm transition-all duration-300',
-                    'bg-gradient-to-r from-indigo-500 to-cyan-500 text-white',
-                    'hover:shadow-lg hover:shadow-indigo-500/25 hover:-translate-y-0.5',
-                    'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none',
-                    'flex items-center justify-center gap-2'
+                    'w-full btn-gradient !rounded-xl',
+                    'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:scale-100 disabled:hover:shadow-none',
+                    'flex items-center justify-center gap-2.5'
                   )}
                 >
                   {isSubmitting ? (
@@ -260,9 +281,9 @@ export default function Contact() {
                 {/* Status Messages */}
                 {submitStatus === 'success' && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-2 text-emerald-400 text-sm"
+                    initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
+                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                    className="flex items-center gap-2.5 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm"
                   >
                     <CheckCircle className="w-4 h-4 shrink-0" />
                     Message sent successfully!
@@ -271,9 +292,9 @@ export default function Contact() {
 
                 {submitStatus === 'error' && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-2 text-red-400 text-sm"
+                    initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
+                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                    className="flex items-center gap-2.5 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm"
                   >
                     <XCircle className="w-4 h-4 shrink-0" />
                     Failed to send. Please try again.
