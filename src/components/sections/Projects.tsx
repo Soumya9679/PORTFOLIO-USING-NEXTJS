@@ -12,7 +12,7 @@ const projects = [
       'An AI-based Python coding platform with gamified learning and interactive coding challenges.',
     image: '/images/pulsepy.png',
     tags: ['HTML', 'CSS', 'JavaScript'],
-    link: 'https://team-coffee-code.netlify.app/',
+    link: 'https://pulsepy.tech',
     type: 'link' as const,
   },
   {

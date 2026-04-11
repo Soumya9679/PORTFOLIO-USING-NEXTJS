@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowDown, Github, Linkedin, Mail, Code2, Zap } from 'lucide-react';
+import { ArrowDown, Download, Github, Linkedin, Mail, Code2, Zap } from 'lucide-react';
 import Typewriter from '@/components/effects/Typewriter';
 
 const socialLinks = [
@@ -90,6 +90,14 @@ export default function Hero() {
             >
               View My Work
               <ArrowDown className="w-4 h-4 transition-transform group-hover:translate-y-0.5" />
+            </a>
+            <a
+              href="/Soumyadip_Maity_CV.pdf"
+              download
+              className="btn-ghost inline-flex items-center gap-2.5"
+            >
+              <Download className="w-4 h-4" />
+              Download CV
             </a>
             <a
               href="#contact"
