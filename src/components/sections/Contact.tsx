@@ -38,9 +38,9 @@ const socialLinks = [
   },
   {
     icon: Github,
-    href: 'https://github.com/Maitysoumya12345',
+    href: 'https://github.com/Soumya9679',
     label: 'GitHub',
-    username: '@Maitysoumya12345',
+    username: '@Soumya9679',
     color: 'from-violet-container/20 to-violet-deep/20',
     iconColor: 'text-violet-primary',
   },
@@ -54,9 +54,9 @@ const socialLinks = [
   },
   {
     icon: Code2,
-    href: 'https://leetcode.com/u/_soumya__dip_/',
+    href: 'https://leetcode.com/u/Soumya9679/',
     label: 'LeetCode',
-    username: '@_soumya__dip_',
+    username: '@Soumya9679',
     color: 'from-amber-primary/20 to-orange-500/20',
     iconColor: 'text-amber-primary',
   },
