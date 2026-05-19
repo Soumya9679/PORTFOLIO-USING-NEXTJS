@@ -1,131 +1,97 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
+import { Blocks, BrainCircuit, MonitorSmartphone, Sparkles } from 'lucide-react';
 import SectionHeading from '@/components/ui/SectionHeading';
+import { capabilities, techGroups } from '@/lib/portfolio-data';
+import { cn } from '@/lib/utils';
 
-const skillCategories = [
-  {
-    title: 'Web Technologies',
-    description: 'Building modern web experiences',
-    emoji: '🌐',
-    skills: [
-      { name: 'HTML5', level: 90 },
-      { name: 'CSS3', level: 80 },
-      { name: 'JavaScript', level: 70 },
-    ],
-  },
-  {
-    title: 'Programming Languages',
-    description: 'Core programming foundations',
-    emoji: '⚡',
-    skills: [
-      { name: 'C', level: 85 },
-      { name: 'Java', level: 40 },
-      { name: 'Python', level: 30 },
-    ],
-  },
-];
+const icons = [MonitorSmartphone, Blocks, BrainCircuit, Sparkles];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 40, filter: 'blur(8px)' },
-  visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.7, ease: [0.25, 0.4, 0.25, 1] } },
+const accentClasses = {
+  teal: 'bg-[#dff3ef] text-[#0a5f59]',
+  blue: 'bg-[#e4ebff] text-[#2f5fd7]',
+  gold: 'bg-[#fff0d8] text-[#9a620e]',
+  ink: 'bg-[#e8ece9] text-[#111513]',
 };
 
 export default function Skills() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section id="skills" className="relative py-24 md:py-36 px-6">
-      {/* Section ambient glow */}
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-cyan-container/[0.03] blur-[180px] pointer-events-none" />
+    <section id="skills" className="section-y border-y border-[var(--border)] bg-white/[0.55]">
+      <div className="section-shell">
+        <SectionHeading
+          eyebrow="Skills"
+          title="A practical stack for modern web experiences."
+          subtitle="The focus is not just knowing tools, but using them to create clear layouts, reliable interactions, and polished project pages."
+        />
 
-      <div className="max-w-4xl mx-auto relative">
-        <motion.div
-          variants={shouldReduceMotion ? undefined : containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-        >
-          <motion.div variants={itemVariants}>
-            <SectionHeading
-              badge="// Skills"
-              title="My Skills"
-              subtitle="Technologies and languages I work with"
-            />
-          </motion.div>
+        <div className="grid gap-5 md:grid-cols-2">
+          {capabilities.map((capability, index) => {
+            const Icon = icons[index] ?? MonitorSmartphone;
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {skillCategories.map((category) => (
-              <motion.div
-                key={category.title}
-                variants={itemVariants}
-                className="group glass-card p-8 md:p-10 hover:shadow-glow-sm transition-all duration-500"
+            return (
+              <motion.article
+                key={capability.title}
+                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 22 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ duration: 0.45, delay: index * 0.05, ease: 'easeOut' }}
+                className="surface-card p-6 transition hover:-translate-y-1 hover:shadow-[var(--shadow-soft)]"
               >
-                {/* Category header */}
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-xl">{category.emoji}</span>
-                  <h3 className="text-lg font-bold font-display text-[#e1e2ed]">
-                    {category.title}
-                  </h3>
+                <div
+                  className={cn(
+                    'mb-6 inline-flex h-11 w-11 items-center justify-center rounded-lg',
+                    accentClasses[capability.accent as keyof typeof accentClasses]
+                  )}
+                >
+                  <Icon className="h-5 w-5" />
                 </div>
-                <p className="text-[#958ea0] text-sm mb-8 ml-9">
-                  {category.description}
+                <h3 className="font-display text-xl font-semibold text-[var(--text-primary)]">
+                  {capability.title}
+                </h3>
+                <p className="mt-3 text-sm leading-7 text-[var(--text-secondary)]">
+                  {capability.description}
                 </p>
+              </motion.article>
+            );
+          })}
+        </div>
 
-                {/* Skills with animated bars */}
-                <div className="space-y-6">
-                  {category.skills.map((skill) => (
-                    <div key={skill.name}>
-                      <div className="flex items-center justify-between mb-2.5">
-                        <span className="text-[#cbc3d7] text-sm font-medium">
-                          {skill.name}
-                        </span>
-                        <span className="text-[#494454] text-xs font-mono">
-                          {skill.level}%
-                        </span>
-                      </div>
-                      {/* Progress bar track */}
-                      <div className="h-2 bg-white/[0.04] rounded-full overflow-hidden relative">
-                        {/* Gradient fill with glow */}
-                        <motion.div
-                          className="h-full rounded-full relative"
-                          style={{
-                            background: 'linear-gradient(90deg, #b76dff 0%, #00cbe6 100%)',
-                          }}
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${skill.level}%` }}
-                          viewport={{ once: true }}
-                          transition={{
-                            duration: shouldReduceMotion ? 0 : 1.2,
-                            delay: 0.3,
-                            ease: [0.25, 0.4, 0.25, 1],
-                          }}
-                        >
-                          {/* Shimmer effect */}
-                          <div
-                            className="absolute inset-0 rounded-full opacity-30"
-                            style={{
-                              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)',
-                              backgroundSize: '200% 100%',
-                              animation: 'shimmer 3s linear infinite',
-                            }}
-                          />
-                          {/* Glow dot at the end */}
-                          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-cyan-container shadow-[0_0_12px_rgba(0,203,230,0.5)]" />
-                        </motion.div>
-                      </div>
-                    </div>
-                  ))}
+        <div className="surface-dark mt-8 p-6 md:p-8">
+          <div className="grid gap-8 lg:grid-cols-[0.65fr_1fr] lg:items-start">
+            <div>
+              <p className="text-sm font-semibold text-white/[0.58]">Toolbox</p>
+              <h3 className="mt-3 font-display text-3xl font-semibold text-white">
+                Technologies I use to ship.
+              </h3>
+            </div>
+
+            <div className="grid gap-6">
+              {techGroups.map((group) => (
+                <div
+                  key={group.title}
+                  className="border-t border-white/10 pt-5 first:border-t-0 first:pt-0"
+                >
+                  <p className="mb-3 text-sm font-semibold text-white/[0.62]">
+                    {group.title}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {group.items.map((item) => (
+                      <span
+                        key={item}
+                        className="rounded-full border border-white/[0.12] bg-white/[0.08] px-3 py-1 text-xs font-semibold text-white/[0.82]"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </motion.div>
-            ))}
+              ))}
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -1,56 +1,46 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sparkles } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Download, Menu, X } from 'lucide-react';
+import { navItems, profile } from '@/lib/portfolio-data';
 import { cn } from '@/lib/utils';
-
-const navItems = [
-  { label: 'Home', href: '#home' },
-  { label: 'About', href: '#about' },
-  { label: 'Skills', href: '#skills' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Contact', href: '#contact' },
-];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
 
-  // Track scroll state and active section
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      const hasHomeSection = Boolean(document.getElementById('home'));
+      setScrolled(window.scrollY > 24 || !hasHomeSection);
 
-      // Detect active section (iterate bottom-up)
-      const sections = navItems.map((item) => item.href.slice(1));
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const element = document.getElementById(sections[i]);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= 120) {
-            setActiveSection(sections[i]);
-            break;
-          }
+      for (let i = navItems.length - 1; i >= 0; i--) {
+        const id = navItems[i].href.slice(1);
+        const element = document.getElementById(id);
+
+        if (element && element.getBoundingClientRect().top <= 120) {
+          setActiveSection(id);
+          break;
         }
       }
     };
 
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close menu on Escape key
   useEffect(() => {
-    const onEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsOpen(false);
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsOpen(false);
     };
+
     document.addEventListener('keydown', onEscape);
     return () => document.removeEventListener('keydown', onEscape);
   }, []);
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
     return () => {
@@ -59,13 +49,10 @@ export default function Navbar() {
   }, [isOpen]);
 
   const handleNavClick = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-      e.preventDefault();
+    (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      event.preventDefault();
       setIsOpen(false);
-      const element = document.querySelector(href);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
+      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
     },
     []
   );
@@ -73,72 +60,91 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
+        'fixed left-0 right-0 top-0 z-50 border-b transition duration-300',
         scrolled
-          ? 'bg-nebula-surface/40 backdrop-blur-2xl shadow-ambient'
-          : 'bg-transparent'
+          ? 'border-[var(--border)] bg-[rgba(245,247,244,0.88)] shadow-[0_10px_35px_rgba(17,21,19,0.08)] backdrop-blur-xl'
+          : 'border-transparent bg-transparent'
       )}
     >
-      {/* Refractive bottom edge - ghost border */}
-      {scrolled && (
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-violet-container/20 to-transparent" />
-      )}
-
-      <nav className="max-w-6xl mx-auto px-6 h-16 md:h-20 flex items-center justify-between">
-        {/* Logo */}
+      <nav className="section-shell flex h-16 items-center justify-between md:h-20">
         <a
           href="#home"
-          onClick={(e) => handleNavClick(e, '#home')}
-          className="relative z-50 group"
-          aria-label="Home"
+          onClick={(event) => handleNavClick(event, '#home')}
+          className={cn(
+            'relative z-50 font-display text-base font-bold transition',
+            scrolled ? 'text-[var(--text-primary)]' : 'text-white'
+          )}
+          aria-label="Go to home"
         >
-          <span className="text-2xl font-bold font-display text-gradient-hero">
-            SM
-          </span>
-          <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-violet-container to-cyan-container scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+          Soumyadip Maity
         </a>
 
-        {/* Desktop Navigation */}
-        <ul className="hidden md:flex items-center gap-1 bg-nebula-surface/30 backdrop-blur-xl rounded-full px-2 py-1.5 border border-white/[0.04]" role="navigation">
-          {navItems.map((item) => (
-            <li key={item.href}>
-              <a
-                href={item.href}
-                onClick={(e) => handleNavClick(e, item.href)}
-                className={cn(
-                  'px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 relative',
-                  activeSection === item.href.slice(1)
-                    ? 'text-[#e1e2ed]'
-                    : 'text-[#958ea0] hover:text-[#cbc3d7]'
-                )}
-              >
-                {activeSection === item.href.slice(1) && (
-                  <motion.span
-                    layoutId="navActiveIndicator"
-                    className="absolute inset-0 rounded-full bg-white/[0.08] border border-white/[0.06]"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">{item.label}</span>
-              </a>
-            </li>
-          ))}
+        <ul
+          className={cn(
+            'hidden items-center gap-1 rounded-lg border px-1.5 py-1 md:flex',
+            scrolled
+              ? 'border-[var(--border)] bg-white/70'
+              : 'border-white/[0.15] bg-black/20 backdrop-blur-xl'
+          )}
+        >
+          {navItems.map((item) => {
+            const isActive = activeSection === item.href.slice(1);
+
+            return (
+              <li key={item.href}>
+                <a
+                  href={item.href}
+                  onClick={(event) => handleNavClick(event, item.href)}
+                  className={cn(
+                    'relative inline-flex rounded-md px-3 py-2 text-sm font-semibold transition',
+                    scrolled
+                      ? 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                      : 'text-white/[0.72] hover:text-white',
+                    isActive &&
+                      (scrolled
+                        ? 'text-[var(--text-primary)]'
+                        : 'text-white')
+                  )}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="activeNav"
+                      className={cn(
+                        'absolute inset-0 rounded-md',
+                        scrolled ? 'bg-[var(--surface-muted)]' : 'bg-white/[0.12]'
+                      )}
+                      transition={{ type: 'spring', stiffness: 360, damping: 32 }}
+                    />
+                  )}
+                  <span className="relative">{item.label}</span>
+                </a>
+              </li>
+            );
+          })}
         </ul>
 
-        {/* Desktop CTA */}
         <a
-          href="#contact"
-          onClick={(e) => handleNavClick(e, '#contact')}
-          className="hidden md:inline-flex items-center gap-2 btn-gradient !py-2.5 !px-5 !text-sm"
+          href={profile.resumeHref}
+          download
+          className={cn(
+            'hidden rounded-lg border px-4 py-2 text-sm font-semibold transition md:inline-flex md:items-center md:gap-2',
+            scrolled
+              ? 'border-[var(--text-primary)] bg-[var(--surface-strong)] text-white hover:bg-[var(--accent-strong)]'
+              : 'border-white/30 bg-white text-[var(--text-primary)] hover:bg-white/[0.9]'
+          )}
         >
-          <Sparkles className="w-3.5 h-3.5" />
-          Let&apos;s Talk
+          <Download className="h-4 w-4" />
+          Resume
         </a>
 
-        {/* Mobile Menu Toggle */}
         <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="relative z-50 md:hidden p-2.5 rounded-xl text-[#e1e2ed] hover:bg-white/[0.05] transition-colors"
+          onClick={() => setIsOpen((value) => !value)}
+          className={cn(
+            'relative z-50 rounded-lg border p-2.5 transition md:hidden',
+            scrolled
+              ? 'border-[var(--border)] bg-white text-[var(--text-primary)]'
+              : 'border-white/20 bg-black/20 text-white backdrop-blur-xl'
+          )}
           aria-label="Toggle navigation menu"
           aria-expanded={isOpen}
         >
@@ -146,51 +152,41 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-nebula-base/98 backdrop-blur-2xl z-40 md:hidden"
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-40 bg-[var(--surface-strong)] text-white md:hidden"
           >
-            {/* Decorative orbs */}
-            <div className="absolute top-[20%] left-[10%] w-64 h-64 rounded-full bg-violet-container/10 blur-[100px]" />
-            <div className="absolute bottom-[20%] right-[10%] w-48 h-48 rounded-full bg-cyan-container/8 blur-[80px]" />
-
-            <nav className="flex flex-col items-center justify-center h-full gap-6">
-              {navItems.map((item, i) => (
+            <nav className="flex h-full flex-col items-start justify-center gap-5 px-8">
+              {navItems.map((item, index) => (
                 <motion.a
                   key={item.href}
                   href={item.href}
-                  initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
-                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  exit={{ opacity: 0, y: 15, filter: 'blur(5px)' }}
-                  transition={{ delay: 0.05 + i * 0.06, duration: 0.4, ease: [0.25, 0.4, 0.25, 1] }}
-                  onClick={(e) => handleNavClick(e, item.href)}
-                  className={cn(
-                    'text-3xl font-bold font-display tracking-tight transition-colors duration-200',
-                    activeSection === item.href.slice(1)
-                      ? 'text-gradient-primary'
-                      : 'text-[#958ea0] hover:text-[#e1e2ed]'
-                  )}
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ delay: 0.04 + index * 0.04, duration: 0.24 }}
+                  onClick={(event) => handleNavClick(event, item.href)}
+                  className="font-display text-4xl font-semibold"
                 >
                   {item.label}
                 </motion.a>
               ))}
 
               <motion.a
-                href="#contact"
-                initial={{ opacity: 0, y: 30 }}
+                href={profile.resumeHref}
+                download
+                initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35, duration: 0.4 }}
-                onClick={(e) => handleNavClick(e, '#contact')}
-                className="mt-6 btn-gradient inline-flex items-center gap-2"
+                transition={{ delay: 0.28, duration: 0.24 }}
+                className="button-light mt-5"
               >
-                <Sparkles className="w-4 h-4" />
-                Let&apos;s Talk
+                <Download className="h-4 w-4" />
+                Download resume
               </motion.a>
             </nav>
           </motion.div>

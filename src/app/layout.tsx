@@ -25,43 +25,43 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: '#06080F',
+  themeColor: '#f5f7f4',
   width: 'device-width',
   initialScale: 1,
 };
 
 export const metadata: Metadata = {
   title: {
-    default: 'Soumyadip Maity | Full Stack Developer',
+    default: 'Soumyadip Maity | Frontend Developer',
     template: '%s | Soumyadip Maity',
   },
   description:
-    'A passionate developer crafting clean & creative digital experiences with modern technologies. Explore my portfolio to see projects, skills, and more.',
+    'Professional portfolio of Soumyadip Maity, a frontend developer building polished web interfaces, learning products, and interactive tools.',
   keywords: [
     'Soumyadip Maity',
-    'Full Stack Developer',
+    'Frontend Developer',
     'Web Developer',
     'Portfolio',
     'React',
     'Next.js',
     'JavaScript',
-    'Frontend Developer',
+    'Tailwind CSS',
   ],
   authors: [{ name: 'Soumyadip Maity' }],
   creator: 'Soumyadip Maity',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    title: 'Soumyadip Maity | Full Stack Developer',
+    title: 'Soumyadip Maity | Frontend Developer',
     description:
-      'A passionate developer crafting clean & creative digital experiences with modern technologies.',
+      'A professional portfolio featuring polished web projects, interactive tools, and frontend development work.',
     siteName: 'Soumyadip Maity Portfolio',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Soumyadip Maity | Full Stack Developer',
+    title: 'Soumyadip Maity | Frontend Developer',
     description:
-      'A passionate developer crafting clean & creative digital experiences with modern technologies.',
+      'Explore projects, skills, and contact details for Soumyadip Maity.',
   },
   robots: {
     index: true,
@@ -87,7 +87,7 @@ export default function RootLayout({
       className={`${inter.variable} ${manrope.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
-      <body className="font-sans overflow-x-hidden">
+      <body className="overflow-x-hidden font-sans">
         <AnimatedBackground />
         <Navbar />
         <main className="relative z-10">{children}</main>

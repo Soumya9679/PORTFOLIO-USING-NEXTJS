@@ -6,17 +6,18 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
-  Send,
+  ArrowUpRight,
+  CheckCircle2,
+  Code2,
   Github,
   Linkedin,
-  Mail,
-  Code2,
   Loader2,
-  CheckCircle,
+  Mail,
+  Send,
   XCircle,
-  ArrowUpRight,
 } from 'lucide-react';
 import SectionHeading from '@/components/ui/SectionHeading';
+import { profile, socialLinks } from '@/lib/portfolio-data';
 import { cn } from '@/lib/utils';
 
 const contactSchema = z.object({
@@ -27,55 +28,15 @@ const contactSchema = z.object({
 
 type ContactFormData = z.infer<typeof contactSchema>;
 
-const socialLinks = [
-  {
-    icon: Mail,
-    href: 'mailto:maitysoumya108@gmail.com',
-    label: 'Email',
-    username: 'maitysoumya108@gmail.com',
-    color: 'from-rose-500/20 to-orange-500/20',
-    iconColor: 'text-rose-400',
-  },
-  {
-    icon: Github,
-    href: 'https://github.com/Soumya9679',
-    label: 'GitHub',
-    username: '@Soumya9679',
-    color: 'from-violet-container/20 to-violet-deep/20',
-    iconColor: 'text-violet-primary',
-  },
-  {
-    icon: Linkedin,
-    href: 'https://linkedin.com/in/soumyadip-maity-996686353',
-    label: 'LinkedIn',
-    username: 'Soumyadip Maity',
-    color: 'from-blue-500/20 to-cyan-500/20',
-    iconColor: 'text-blue-400',
-  },
-  {
-    icon: Code2,
-    href: 'https://leetcode.com/u/Soumya9679/',
-    label: 'LeetCode',
-    username: '@Soumya9679',
-    color: 'from-amber-primary/20 to-orange-500/20',
-    iconColor: 'text-amber-primary',
-  },
-];
+const iconMap = {
+  email: Mail,
+  github: Github,
+  linkedin: Linkedin,
+  leetcode: Code2,
+} as const;
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 40, filter: 'blur(8px)' },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: 'blur(0px)',
-    transition: { duration: 0.7, ease: [0.25, 0.4, 0.25, 1] },
-  },
-};
+const inputBaseClass =
+  'w-full rounded-lg border bg-white px-4 py-3.5 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] transition focus:border-transparent focus:outline-none focus:ring-2';
 
 export default function Contact() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>(
@@ -113,197 +74,208 @@ export default function Contact() {
     }
   };
 
-  const inputBaseClass =
-    'w-full px-5 py-3.5 bg-nebula-surface-low/80 border rounded-xl text-[#e1e2ed] text-sm placeholder:text-[#494454] focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-300 backdrop-blur-sm';
-
   return (
-    <section id="contact" className="relative py-24 md:py-36 px-6">
-      {/* Section ambient glow */}
-      <div className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-violet-container/[0.03] blur-[200px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-cyan-container/[0.02] blur-[150px] pointer-events-none" />
-
-      <div className="max-w-5xl mx-auto relative">
-        <motion.div
-          variants={shouldReduceMotion ? undefined : containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-        >
-          <motion.div variants={itemVariants}>
+    <section
+      id="contact"
+      className="section-y border-t border-[var(--border)] bg-[var(--surface-muted)]"
+    >
+      <div className="section-shell">
+        <div className="grid gap-10 lg:grid-cols-[0.86fr_1.14fr] lg:items-start">
+          <motion.div
+            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+          >
             <SectionHeading
-              badge="// Contact"
-              title="Let&apos;s Connect"
-              subtitle="Have a question or want to work together? Reach out!"
+              eyebrow="Contact"
+              title="Let's talk about your next web idea."
+              subtitle="Send a message, download the resume, or reach out through any social channel. I keep communication direct and project-focused."
             />
+
+            <div className="surface-dark p-6 md:p-8">
+              <p className="text-sm font-semibold text-white/[0.58]">Direct email</p>
+              <a
+                href={`mailto:${profile.email}`}
+                className="mt-3 block break-words font-display text-2xl font-semibold text-white transition hover:text-[#8ddbd5]"
+              >
+                {profile.email}
+              </a>
+
+              <div className="mt-8 space-y-3">
+                {socialLinks.map(({ href, label, username, kind }) => {
+                  const Icon = iconMap[kind];
+
+                  return (
+                    <a
+                      key={label}
+                      href={href}
+                      target={href.startsWith('mailto') ? undefined : '_blank'}
+                      rel={href.startsWith('mailto') ? undefined : 'noopener noreferrer'}
+                      className="flex items-center gap-4 rounded-lg border border-white/10 px-4 py-3 text-white/[0.78] transition hover:border-white/[0.24] hover:bg-white/[0.06] hover:text-white"
+                    >
+                      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/[0.08]">
+                        <Icon className="h-4 w-4" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm font-semibold">{label}</span>
+                        <span className="block truncate text-xs text-white/[0.52]">
+                          {username}
+                        </span>
+                      </span>
+                      <ArrowUpRight className="h-4 w-4 shrink-0" />
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Social Links Card */}
-            <motion.div
-              variants={itemVariants}
-              className="glass-card p-8 md:p-10"
+          <motion.div
+            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.5, delay: 0.06, ease: 'easeOut' }}
+            className="surface-card p-6 md:p-8"
+          >
+            <h3 className="font-display text-2xl font-semibold text-[var(--text-primary)]">
+              Send a message
+            </h3>
+            <p className="mt-3 text-sm leading-7 text-[var(--text-secondary)]">
+              Share the goal, timeline, and any useful context. The form will send
+              your note directly to me.
+            </p>
+
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="mt-8 space-y-5"
+              noValidate
             >
-              <h3 className="text-xl font-bold font-display text-[#e1e2ed] mb-8">
-                Find me online
-              </h3>
-              <div className="space-y-4">
-                {socialLinks.map(({ icon: Icon, href, label, username, color, iconColor }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target={href.startsWith('mailto') ? undefined : '_blank'}
-                    rel={
-                      href.startsWith('mailto')
-                        ? undefined
-                        : 'noopener noreferrer'
-                    }
-                    className="group flex items-center gap-4 p-4 rounded-2xl hover:bg-white/[0.03] transition-all duration-300"
-                  >
-                    <div className={cn(
-                      'w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:shadow-glow-sm',
-                      color
-                    )}>
-                      <Icon className={cn('w-5 h-5', iconColor)} />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[#e1e2ed] text-sm font-semibold">{label}</p>
-                      <p className="text-[#958ea0] text-xs truncate">
-                        {username}
-                      </p>
-                    </div>
-                    <ArrowUpRight className="w-4 h-4 text-[#494454] group-hover:text-[#958ea0] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </a>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Contact Form Card */}
-            <motion.div
-              variants={itemVariants}
-              className="glass-card p-8 md:p-10"
-            >
-              <h3 className="text-xl font-bold font-display text-[#e1e2ed] mb-8">
-                Send a message
-              </h3>
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="space-y-5"
-                noValidate
-              >
-                {/* Name */}
-                <div>
-                  <input
-                    {...register('name')}
-                    placeholder="Your Name"
-                    autoComplete="name"
-                    className={cn(
-                      inputBaseClass,
-                      errors.name
-                        ? 'border-red-500/50 focus:ring-red-500/30'
-                        : 'border-white/[0.06] focus:ring-violet-container/40'
-                    )}
-                  />
-                  {errors.name && (
-                    <p className="mt-2 text-xs text-red-400 flex items-center gap-1.5">
-                      <XCircle className="w-3 h-3" />
-                      {errors.name.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* Email */}
-                <div>
-                  <input
-                    {...register('email')}
-                    type="email"
-                    placeholder="Your Email"
-                    autoComplete="email"
-                    className={cn(
-                      inputBaseClass,
-                      errors.email
-                        ? 'border-red-500/50 focus:ring-red-500/30'
-                        : 'border-white/[0.06] focus:ring-violet-container/40'
-                    )}
-                  />
-                  {errors.email && (
-                    <p className="mt-2 text-xs text-red-400 flex items-center gap-1.5">
-                      <XCircle className="w-3 h-3" />
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* Message */}
-                <div>
-                  <textarea
-                    {...register('message')}
-                    placeholder="Your Message"
-                    rows={5}
-                    className={cn(
-                      inputBaseClass,
-                      'resize-none',
-                      errors.message
-                        ? 'border-red-500/50 focus:ring-red-500/30'
-                        : 'border-white/[0.06] focus:ring-violet-container/40'
-                    )}
-                  />
-                  {errors.message && (
-                    <p className="mt-2 text-xs text-red-400 flex items-center gap-1.5">
-                      <XCircle className="w-3 h-3" />
-                      {errors.message.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={cn(
-                    'w-full btn-gradient !rounded-xl',
-                    'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:scale-100 disabled:hover:shadow-none',
-                    'flex items-center justify-center gap-2.5'
-                  )}
+              <div>
+                <label
+                  htmlFor="name"
+                  className="mb-2 block text-sm font-semibold text-[var(--text-primary)]"
                 >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4" />
-                      Send Message
-                    </>
+                  Name
+                </label>
+                <input
+                  id="name"
+                  {...register('name')}
+                  placeholder="Your name"
+                  autoComplete="name"
+                  className={cn(
+                    inputBaseClass,
+                    errors.name
+                      ? 'border-red-400 focus:ring-red-200'
+                      : 'border-[var(--border)] focus:ring-[rgba(15,118,110,0.22)]'
                   )}
-                </button>
-
-                {/* Status Messages */}
-                {submitStatus === 'success' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
-                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                    className="flex items-center gap-2.5 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm"
-                  >
-                    <CheckCircle className="w-4 h-4 shrink-0" />
-                    Message sent successfully!
-                  </motion.div>
+                />
+                {errors.name && (
+                  <p className="mt-2 flex items-center gap-1.5 text-xs text-red-600">
+                    <XCircle className="h-3.5 w-3.5" />
+                    {errors.name.message}
+                  </p>
                 )}
+              </div>
 
-                {submitStatus === 'error' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
-                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                    className="flex items-center gap-2.5 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm"
-                  >
-                    <XCircle className="w-4 h-4 shrink-0" />
-                    Failed to send. Please try again.
-                  </motion.div>
+              <div>
+                <label
+                  htmlFor="email"
+                  className="mb-2 block text-sm font-semibold text-[var(--text-primary)]"
+                >
+                  Email
+                </label>
+                <input
+                  id="email"
+                  {...register('email')}
+                  type="email"
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  className={cn(
+                    inputBaseClass,
+                    errors.email
+                      ? 'border-red-400 focus:ring-red-200'
+                      : 'border-[var(--border)] focus:ring-[rgba(15,118,110,0.22)]'
+                  )}
+                />
+                {errors.email && (
+                  <p className="mt-2 flex items-center gap-1.5 text-xs text-red-600">
+                    <XCircle className="h-3.5 w-3.5" />
+                    {errors.email.message}
+                  </p>
                 )}
-              </form>
-            </motion.div>
-          </div>
-        </motion.div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="mb-2 block text-sm font-semibold text-[var(--text-primary)]"
+                >
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  {...register('message')}
+                  placeholder="Tell me what you want to build..."
+                  rows={6}
+                  className={cn(
+                    inputBaseClass,
+                    'resize-none',
+                    errors.message
+                      ? 'border-red-400 focus:ring-red-200'
+                      : 'border-[var(--border)] focus:ring-[rgba(15,118,110,0.22)]'
+                  )}
+                />
+                {errors.message && (
+                  <p className="mt-2 flex items-center gap-1.5 text-xs text-red-600">
+                    <XCircle className="h-3.5 w-3.5" />
+                    {errors.message.message}
+                  </p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="button-primary w-full disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Sending
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4" />
+                    Send message
+                  </>
+                )}
+              </button>
+
+              {submitStatus === 'success' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
+                >
+                  <CheckCircle2 className="h-4 w-4 shrink-0" />
+                  Message sent successfully.
+                </motion.div>
+              )}
+
+              {submitStatus === 'error' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                >
+                  <XCircle className="h-4 w-4 shrink-0" />
+                  Failed to send. Please try again.
+                </motion.div>
+              )}
+            </form>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

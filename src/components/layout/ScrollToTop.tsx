@@ -8,7 +8,9 @@ export default function ScrollToTop() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 400);
+    const onScroll = () => setVisible(window.scrollY > 500);
+
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -17,19 +19,14 @@ export default function ScrollToTop() {
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       className={cn(
-        'fixed bottom-6 right-6 z-50 w-12 h-12 rounded-2xl',
-        'bg-nebula-surface-high/80 backdrop-blur-xl',
-        'border border-white/[0.06]',
-        'flex items-center justify-center text-[#cbc3d7]',
-        'shadow-float',
-        'transition-all duration-500 hover:-translate-y-1 hover:shadow-glow-sm hover:text-violet-primary hover:border-violet-container/30',
+        'fixed bottom-5 right-5 z-50 inline-flex h-11 w-11 items-center justify-center rounded-lg border border-[var(--border)] bg-white text-[var(--text-primary)] shadow-[var(--shadow-card)] transition duration-300 hover:-translate-y-1 hover:border-[var(--text-primary)]',
         visible
-          ? 'opacity-100 translate-y-0'
-          : 'opacity-0 translate-y-4 pointer-events-none'
+          ? 'translate-y-0 opacity-100'
+          : 'pointer-events-none translate-y-4 opacity-0'
       )}
       aria-label="Scroll to top"
     >
-      <ArrowUp className="w-5 h-5" />
+      <ArrowUp className="h-5 w-5" />
     </button>
   );
 }
